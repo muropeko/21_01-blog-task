@@ -1,7 +1,9 @@
 import type { IPost } from "../../../shared/types/post.interface";
 import { PostCard } from "./PostCard";
-import styles from "./PostList.module.css";
 import { PostSkeleton } from "./PostSkeleton";
+import styles from "./PostList.module.css";
+import { usePagination } from "../../../hooks/usePagination";
+import { Pagination } from "../pagination";
 
 interface PostListProps {
   posts: IPost[];
@@ -9,15 +11,42 @@ interface PostListProps {
 }
 
 export const PostList = ({ posts, loading }: PostListProps) => {
+  const {
+    currentPage,
+    totalPages,
+    visiblePosts,
+    nextPage,
+    prevPage,
+  } = usePagination({
+    posts
+  });
+
+  const pagination = (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      nextPage={nextPage}
+      prevPage={prevPage}
+    />
+  );
+
   return (
-    <div className={styles.postList}>
-      {loading ? (
-        <PostSkeleton />
-      ) : posts.length > 0 ? (
-        posts.map(post => <PostCard key={post.id} post={post} />)
-      ) : (
-        <h1>No posts</h1>
-      )}
-    </div>
+    <>
+      {pagination}
+
+      <div className={styles.postList}>
+        {loading ? (
+          <PostSkeleton />
+        ) : visiblePosts.length > 0 ? (
+          visiblePosts.map(post => (
+            <PostCard key={post.id} post={post} />
+          ))
+        ) : (
+          <h1>No posts</h1>
+        )}
+      </div>
+
+      {pagination}
+    </>
   );
 };
