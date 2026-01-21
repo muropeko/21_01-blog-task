@@ -1,0 +1,24 @@
+.suggestionsWrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+
+.suggestionItem {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suggestionItem:hover {
+    background-color: #f0f0f0;
+    color: #1a73e8;
+}

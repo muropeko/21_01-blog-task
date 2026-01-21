@@ -1,0 +1,14 @@
+.searchBlock {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.searchWrapper {
+    display: flex;
+    border: 1px solid #ddd;
+    transition: 0.3s ease-in-out;
+}
+
+.searchWrapper:focus-within {
+    border-color: #1a73e8;
+}

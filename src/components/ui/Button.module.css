@@ -1,0 +1,27 @@
+.btn {
+    font-weight: 500;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    line-height: 0;
+}
+
+.searchButton {
+    background-color: #1a73e8;
+    color: #fff;
+}
+
+.searchButton:hover {
+    background-color: #1568d6;
+    color: #f1f1f1;
+}
+
+.clearButton {
+    background: none;
+    color: #666;
+}
+
+.clearButton:hover {
+    color: #585858
+}
