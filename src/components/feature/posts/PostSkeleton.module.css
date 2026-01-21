@@ -1,0 +1,35 @@
+.postSkeleton {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: pulse 1.5s infinite;
+  width: 100%;
+}
+
+.skeletonTitle {
+  height: 18px;
+  width: 60%;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+}
+
+.skeletonBody {
+  height: 14px;
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+}
+
+.skeletonBody.short {
+  width: 80%;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
