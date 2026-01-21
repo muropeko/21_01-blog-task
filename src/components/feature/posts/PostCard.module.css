@@ -1,0 +1,19 @@
+.post {
+  padding: 12px;
+  border: 1px solid #ddd;
+  transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out, border 0.1s ease-in-out;
+}
+
+.post:hover {
+  cursor: pointer;
+  background-color: #f9f9f9;
+  color: #1a73e8;
+  border: #1a73e8 solid 1px;
+}
+
+.postTitle {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
