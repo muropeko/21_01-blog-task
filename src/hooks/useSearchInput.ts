@@ -1,43 +1,47 @@
 import { useState } from "react";
+import { useDebounce } from "./useDebounce";
 
 export const useSearchInput = () => {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [showSuggestions, setShowSuggestions] = useState(false);
+  const [inputValue, setInputValue] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
-    const handleChange = (value: string) => {
-        setSearchTerm(value);
+  const debouncedInputValue = useDebounce(inputValue)
 
-        if (!showSuggestions) {
-            setShowSuggestions(true);
-        }
-    };
+  const handleChange = (value: string) => {
+    setInputValue(value)
+    if (!showSuggestions) setShowSuggestions(true)
+  };
 
-    const handleFocus = () => setShowSuggestions(true);
+  const handleFocus = () => setShowSuggestions(true)
+  const handleBlur = () => setTimeout(() => setShowSuggestions(false), 100)
 
-    const handleBlur = () => setTimeout(() => setShowSuggestions(false), 100);
+  const selectSuggestion = (value: string) => {
+    setSearchTerm(value)
+    setInputValue(value)
+    setShowSuggestions(false)
+  };
 
-    const selectSuggestion = (value: string) => {
-        setSearchTerm(value);
-        setShowSuggestions(false);
-        alert(value)
-    };
+  const submit = () => {
+    if (!inputValue.trim()) return
+    setSearchTerm(inputValue)
+  };
 
-    const submit = () => {
-        if (!searchTerm.trim()) return;
-        setSearchTerm(searchTerm);
-        alert(searchTerm)
-    };
+  const clear = () => {
+    setInputValue("")
+    setSearchTerm("")
+  };
 
-    const clear = () => setSearchTerm("");
-
-    return {
-        searchTerm,
-        handleChange,
-        showSuggestions,
-        handleFocus,
-        handleBlur,
-        selectSuggestion,
-        submit,
-        clear,
-    };
+  return {
+    inputValue,
+    debouncedInputValue,
+    searchTerm,
+    showSuggestions,
+    handleChange,
+    handleFocus,
+    handleBlur,
+    selectSuggestion,
+    submit,
+    clear,
+  };
 };
