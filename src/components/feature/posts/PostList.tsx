@@ -1,52 +1,57 @@
+import { PostCard, PostSkeleton } from ".";
 import type { IPost } from "../../../shared/types/post.interface";
-import { PostCard } from "./PostCard";
-import { PostSkeleton } from "./PostSkeleton";
-import styles from "./PostList.module.css";
-import { usePagination } from "../../../hooks/usePagination";
 import { Pagination } from "../pagination";
+import styles from "./PostList.module.css";
 
 interface PostListProps {
   posts: IPost[];
   loading: boolean;
+  page: number;
+  setPage: (page: number) => void;
+  totalPages: number;
+  limit: number;
+  changeLimit: (newLimit: number) => void;
 }
 
-export const PostList = ({ posts, loading }: PostListProps) => {
-  const {
-    currentPage,
-    totalPages,
-    visiblePosts,
-    nextPage,
-    prevPage,
-  } = usePagination({
-    posts
-  });
-
-  const pagination = (
-    <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      nextPage={nextPage}
-      prevPage={prevPage}
-    />
-  );
+export const PostList = ({
+  posts,
+  loading,
+  page,
+  setPage,
+  totalPages,
+  limit,
+  changeLimit,
+}: PostListProps) => {
+  const nextPage = () => setPage(Math.min(page + 1, totalPages))
+  const prevPage = () => setPage(Math.max(page - 1, 1))
 
   return (
-    <>
-      {pagination}
+    <div className={styles.container}>
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        nextPage={nextPage}
+        prevPage={prevPage}
+        limit={limit}
+        changeLimit={changeLimit}
+      />
 
       <div className={styles.postList}>
-        {loading ? (
-          <PostSkeleton />
-        ) : visiblePosts.length > 0 ? (
-          visiblePosts.map(post => (
-            <PostCard key={post.id} post={post} />
-          ))
-        ) : (
-          <h1>No posts</h1>
-        )}
+        {loading
+          ? Array.from({ length: limit }).map((_, i) => <PostSkeleton key={i} />)
+          : posts.length > 0
+          ? posts.map((post) => <PostCard key={post.id} post={post} />)
+          : <h1>No posts</h1>}
       </div>
 
-      {pagination}
-    </>
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          nextPage={nextPage}
+          prevPage={prevPage}
+        />
+      )}
+    </div>
   );
 };

@@ -1,15 +1,29 @@
-import { PostList, SearchInput } from "./components/feature"
-import { usePosts } from "./hooks/usePosts"
+import { SearchInput, PostList } from "./components/feature";
+import { usePosts } from "./hooks/queries/usePosts";
+import { usePagination } from "./hooks/usePagination";
+import { useSearchInput } from "./hooks/useSearchInput";
 
-function App() {
-  const { posts, loading } = usePosts()
+export const App = () => {
+  const search = useSearchInput()
+  const { page, setPage, limit, changeLimit } = usePagination(10, search.searchTerm)
+
+  const { posts, isLoading, isFetching, totalPages } = usePosts({ page, limit, searchTerm: search.searchTerm })
 
   return (
-    <div className="container">
-      <SearchInput posts={posts} />
-      <PostList posts={posts} loading={loading} />
-    </div>
-  )
-}
+    <div className="container p-4">
+      <SearchInput search={search} />
 
-export default App
+      <PostList
+        posts={posts}
+        loading={isLoading || isFetching}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+        limit={limit}
+        changeLimit={changeLimit}
+      />
+    </div>
+  );
+};
+
+export default App;

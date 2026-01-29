@@ -1,55 +1,54 @@
-import styles from "./SearchInput.module.css";
-import { Button, Input } from "../../ui";
+import { X, Search } from "lucide-react";
+import { Input, Button } from "../../ui";
 import { Suggestions } from "./Suggestions";
-import { useSearchInput } from "../../../hooks/useSearchInput";
-import type { IPost } from "../../../shared/types/post.interface";
-import { Search, X } from "lucide-react";
+import styles from "./SearchInput.module.css";
+import { usePosts } from "../../../hooks/queries/usePosts";
+import type { useSearchInput } from "../../../hooks/useSearchInput";
 
 interface SearchInputProps {
-    posts: IPost[];
+  search: ReturnType<typeof useSearchInput>
 }
 
-export const SearchInput = ({ posts }: SearchInputProps) => {
-    const {
-        searchTerm,
-        handleChange,
-        showSuggestions,
-        handleFocus,
-        handleBlur,
-        selectSuggestion,
-        clear,
-        submit
-    } = useSearchInput();
+export const SearchInput = ({ search }: SearchInputProps) => {
+  const {
+    inputValue,
+    debouncedInputValue,
+    handleChange,
+    handleFocus,
+    handleBlur,
+    selectSuggestion,
+    clear,
+    submit,
+    showSuggestions,
+  } = search
 
-    const suggestions = posts
-        .map(post => post.title)
-        .filter(title => title.toLowerCase().includes(searchTerm.toLowerCase()));
+  const { posts: suggestionPosts, isLoading: isLoadingSuggestions } = usePosts({ searchTerm: debouncedInputValue });
 
-    return (
-        <div className={styles.searchBlock}>
-            <div className={styles.searchWrapper}>
-                <Input
-                    value={searchTerm}
-                    onChange={e => handleChange(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onKeyDown={e => e.key === 'Enter' && submit()}
-                    placeholder="Search posts..."
-                />
-                <Button onClick={clear} variant="clear">
-                    <X />
-                </Button>
-                <Button onClick={submit} variant="default">
-                    <Search />
-                </Button>
-            </div>
+  const suggestions = suggestionPosts?.map((p) => p.title) ?? [];
 
-            {showSuggestions && searchTerm !== '' && suggestions.length > 0 && (
-                <Suggestions
-                    suggestions={suggestions}
-                    onSelect={selectSuggestion}
-                />
-            )}
-        </div>
-    );
+  return (
+    <div className={styles.searchBlock}>
+      <div className={styles.searchWrapper}>
+        <Input
+          value={inputValue}
+          onChange={(e) => handleChange(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder="Search posts..."
+        />
+        <Button onClick={clear} variant="clear">
+          <X />
+        </Button>
+        <Button onClick={submit} variant="default">
+          <Search />
+        </Button>
+      </div>
+
+        {showSuggestions && debouncedInputValue &&
+            suggestions.length > 0 && !isLoadingSuggestions && (
+            <Suggestions suggestions={suggestions} onSelect={selectSuggestion} />
+            )
+        }
+    </div>
+  );
 };
