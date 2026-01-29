@@ -1,28 +1,17 @@
-import { useState } from "react";
-import type { IPost } from "../shared/types/post.interface";
+import { useState, useEffect } from "react";
 
-interface Props {
-    posts: IPost[];
-    postsPerPage?: number;
-}
+export const usePagination = (initialLimit: number = 10, resetTrigger?: string) => {
+    const [page, setPage] = useState(1)
+    const [limit, setLimit] = useState(initialLimit)
 
-export const usePagination = ({ posts, postsPerPage = 10 }: Props) => {
-    const [currentPage, setCurrentPage] = useState(1);
+    const changeLimit = (newLimit: number) => {
+        setLimit(newLimit)
+        setPage(1)
+    }
 
-    const totalPages = Math.ceil(posts.length / postsPerPage);
+    useEffect(() => {
+        setPage(1)
+    }, [resetTrigger])
 
-    const start = (currentPage - 1) * postsPerPage;
-    const end = start + postsPerPage;
-    const visiblePosts = posts.slice(start, end);
-
-    const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
-    const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
-
-    return {
-        currentPage,
-        totalPages,
-        visiblePosts,
-        nextPage,
-        prevPage,
-    };
+    return { page, setPage, limit, changeLimit };
 };
