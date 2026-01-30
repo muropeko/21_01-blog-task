@@ -18,7 +18,10 @@ export const usePosts = ({ page = 1, limit = 10, searchTerm }: Props) => {
         _page: page,
         _limit: limit,
         title_like: searchTerm,
-      })
+      }),
+    placeholderData: (previous) => previous,
+    staleTime: 60_000,
+    refetchOnMount: false
   })
 
   const posts = data?.data ?? []
@@ -29,8 +32,8 @@ export const usePosts = ({ page = 1, limit = 10, searchTerm }: Props) => {
     if (nextPage <= totalPages) {
       queryClient.prefetchQuery({
         queryKey: ["posts", nextPage, limit, searchTerm],
-        queryFn: () =>
-          fetchPosts({ _page: nextPage, _limit: limit, title_like: searchTerm }),
+        queryFn: () => fetchPosts({ _page: nextPage, _limit: limit, title_like: searchTerm }),
+        staleTime: 60_000
       })
     }
 
